@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Online Food Ordering</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f9f9f9;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background: #ff5722;
+      color: white;
+      padding: 15px;
+      text-align: center;
+      font-size: 28px;
+    }
+    .menu {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin: 20px;
+    }
+    .item {
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      margin: 15px;
+      padding: 20px;
+      width: 200px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+    .item img {
+      width: 100%;
+      height: 150px;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+    .item button {
+      margin-top: 10px;
+      padding: 10px;
+      background: #4CAF50;
+      border: none;
+      color: white;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+    .item button:hover {
+      background: #45a049;
+    }
+    .cart {
+      background: #fff;
+      padding: 20px;
+      margin: 20px auto;
+      width: 90%;
+      max-width: 600px;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .cart h2 {
+      text-align: center;
+      color: #333;
+    }
+    .cart-item {
+      display: flex;
+      justify-content: space-between;
+      margin: 10px 0;
+      padding-bottom: 5px;
+      border-bottom: 1px solid #eee;
+    }
+    .total {
+      text-align: right;
+      font-size: 20px;
+      margin-top: 15px;
+    }
+  </style>
+</head>
+<body>
+
+<header>🍔 Online Food Ordering</header>
+
+<div class="menu" id="menu"></div>
+
+<div class="cart" id="cart">
+  <h2>Your Cart</h2>
+  <div id="cart-items"></div>
+  <div class="total" id="total">Total: $0</div>
+</div>
+
+<script>
+// Hash Table for Menu Items
+const menuItems = {
+  1: { name: "Cheese Burger", price: 5, image: "https://source.unsplash.com/200x150/?burger" },
+  2: { name: "Margherita Pizza", price: 8, image: "https://source.unsplash.com/200x150/?pizza" },
+  3: { name: "Pasta Alfredo", price: 7, image: "https://source.unsplash.com/200x150/?pasta" },
+  4: { name: "French Fries", price: 3, image: "https://source.unsplash.com/200x150/?fries" },
+  5: { name: "Fried Chicken", price: 6, image: "https://source.unsplash.com/200x150/?chicken" },
+  6: { name: "Cold Coffee", price: 4, image: "https://source.unsplash.com/200x150/?coffee" }
+};
+
+// Cart (another Hash Table)
+const cart = {};
+
+const menuDiv = document.getElementById("menu");
+const cartItemsDiv = document.getElementById("cart-items");
+const totalDiv = document.getElementById("total");
+
+// Display Menu
+for (let key in menuItems) {
+  const item = menuItems[key];
+  const itemDiv = document.createElement("div");
+  itemDiv.className = "item";
+  itemDiv.innerHTML = `
+    <img src="${item.image}" alt="${item.name}">
+    <h3>${item.name}</h3>
+    <p>$${item.price}</p>
+    <button onclick="addToCart(${key})">Add to Cart</button>
+  `;
+  menuDiv.appendChild(itemDiv);
+}
+
+// Add to Cart Function
+function addToCart(id) {
+  if (cart[id]) {
+    cart[id].quantity += 1;
+  } else {
+    cart[id] = {
+      name: menuItems[id].name,
+      price: menuItems[id].price,
+      quantity: 1
+    };
+  }
+  updateCart();
+}
+
+// Update Cart Display
+function updateCart() {
+  cartItemsDiv.innerHTML = "";
+  let total = 0;
+
+  for (let id in cart) {
+    const item = cart[id];
+    const cartItemDiv = document.createElement("div");
+    cartItemDiv.className = "cart-item";
+    cartItemDiv.innerHTML = `
+      <span>${item.name} (x${item.quantity})</span>
+      <span>$${item.price * item.quantity}</span>
+    `;
+    cartItemsDiv.appendChild(cartItemDiv);
+
+    total += item.price * item.quantity;
+  }
+
+  totalDiv.innerText = `Total: $${total}`;
+}
+
+</script>
+
+</body>
+</html>
